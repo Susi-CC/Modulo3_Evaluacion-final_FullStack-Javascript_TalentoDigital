@@ -1,0 +1,19 @@
+body {
+    background-image: url("https://cdn.pixabay.com/photo/2016/05/14/15/16/salon-1392007_960_720.png");
+    background-repeat: repeat;
+    background-attachment: fixed;
+    background-position: left;
+    background-size: 25%;
+    background-color: rgba(221, 161, 221, 0.438);
+
+}
+
+h1 {
+    text-align: center;
+    padding: 1%;
+    font-weight: bold;
+   color: rgb(0, 0, 0);
+   text-shadow: rgb(239, 173, 248) 1px 0 10px;
+   background-color: rgba(240, 248, 255, 0.918);
+
+}
