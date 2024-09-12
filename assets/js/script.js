@@ -34,8 +34,9 @@ async function ListadeProductos() {
             <tr><td> 7 </td> <td> Desmaquillante </td> <td> $3490 </td></tr>
             <tr><td> 8 </td> <td> Set de brochas </td> <td> $8490 </td></tr> 
             <tr><td> 9 </td> <td> Delineador de ojos 24h </td> <td> $4490 </td></tr>  
-            </table></div>`,
-            inputPlaceholder: "Escriba el id del producto que desea comprar",
+            </table></div>
+            <p>Para seleccionar un producto, escriba el ID del producto que desea comprar</p>`,
+            inputPlaceholder: "ID",
             confirmButtonText: "Agregar al carro",
             denyButtonText: "Ver carro",
             showDenyButton: true,
