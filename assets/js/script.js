@@ -1,12 +1,3 @@
-//  do {
-//      nombre = prompt('Seleccione un producto escribiendo su ID');
-//      console.log(nombre);
-//      if(nombre === '' || nombre === null || nombre.length < 3){
-//          alert('El campo nombre no lo puede dejar vacio \ny no puede tener menos a 3 carácteres');
-//      }
-// } while (nombre === '' || nombre === null || nombre.length < 3);
-//  Swal.fire({
-
 
 // POP UPS hechos con sweetalert
 (async () => {
@@ -26,7 +17,7 @@
 // Función lista de productos
 async function ListadeProductos() {
     do {
-        var { value: producto, isConfirmed, isDenied } = await Swal.fire({
+        var { value: producto, isDenied, isConfirmed } = await Swal.fire({
             title: "¿Qué desea comprar?",
             input: "text",
             html: `<div style="display: flex; justify-content: center;">
@@ -50,23 +41,24 @@ async function ListadeProductos() {
             showDenyButton: true,
             showCancelButton: false,
         });
-        
-        if (isNaN(producto) || producto < 1 || producto > 9) {
+        if (isDenied) {
+            await VerCarro();
+            return;
+        }else if(isConfirmed){
+        if(isNaN(producto) || producto < 1 || producto > 9) {
             await Swal.fire({
                 title: "El ID ingresado no es válido",
                 confirmButtonText: "Intentar de nuevo",
                 showCancelButton: false,
             });
-        }
-    } while (isNaN(producto) || producto < 1 || producto > 9);
+        };
+    };
+    } while (isNaN(producto) || producto < 1 || producto > 9)
+    // Preguntar cuántas unidades lleva
 
-    if (isDenied) {
-       VerCarro();
-    } else if (isConfirmed) {
-         // Preguntar cuántas unidades lleva
-         
-         do{ if (producto) {
-            var { value: cantidad } = await Swal.fire({
+    do {
+        if (producto) {
+            var { value: cantidad, isDenied } = await Swal.fire({
                 title: "¿Cuántas unidades lleva?",
                 input: "text",
                 confirmButtonText: "Continuar",
@@ -74,6 +66,9 @@ async function ListadeProductos() {
                 showDenyButton: true,
                 showCancelButton: false,
             });
+            if (isDenied) {
+                VerCarro();
+            };
         }
         if (isNaN(cantidad) || cantidad < 0) {
             await Swal.fire({
@@ -81,14 +76,14 @@ async function ListadeProductos() {
                 confirmButtonText: "Intentar de nuevo",
                 showCancelButton: false,
             });
+        } else if (cantidad) {
+            agregar(p[producto - 1], cantidad); // Agregar al carrito
+            agregarmas();
         }
     } while (isNaN(cantidad) || cantidad < 0);
-            if (cantidad) {
-                agregar(p[producto - 1], cantidad); // Agregar al carrito
-                agregarmas();
-            }
-        
-    }
+
+
+
 }
 
 // Ver carro
@@ -137,7 +132,7 @@ async function VerFinal() {
     await Swal.fire({
         title: "Detalle de la compra",
         html: `<div style="display: flex; justify-content: center;"> ${htmlStr} </div> <p> Total de la compra: $${final}</p>`,
-        
+
         showConfirmButton: false,
         showDenyButton: false,
         showCancelButton: false,
@@ -222,10 +217,11 @@ var agregar = function (objeto, cantidad) {
 
 //Función para calcular el precio final
 
-var final = 0;
-var FinCompra = function(){
+
+var FinCompra = function () {
+    final = 0;
     for (let i = 0; i < ProductosCarro.length; ++i) {
-        final +=PrecioCarro[i] 
+        final += PrecioCarro[i]
     }
-return final;
+    return final;
 }
