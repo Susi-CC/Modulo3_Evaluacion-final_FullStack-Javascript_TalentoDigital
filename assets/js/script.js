@@ -41,21 +41,25 @@ async function ListadeProductos() {
             showDenyButton: true,
             showCancelButton: false,
         });
+
+        //Abrir el carro
         if (isDenied) {
             await VerCarro();
             return;
-        }else if(isConfirmed){
-        if(isNaN(producto) || producto < 1 || producto > 9) {
-            await Swal.fire({
-                title: "El ID ingresado no es válido",
-                confirmButtonText: "Intentar de nuevo",
-                showCancelButton: false,
-            });
+            //Continuar compra
+        } else if (isConfirmed) {
+            //Validar
+            if (isNaN(producto) || producto < 1 || producto > 9) {
+                await Swal.fire({
+                    title: "El ID ingresado no es válido",
+                    confirmButtonText: "Intentar de nuevo",
+                    showCancelButton: false,
+                });
+            };
         };
-    };
     } while (isNaN(producto) || producto < 1 || producto > 9)
-    // Preguntar cuántas unidades lleva
 
+    // Preguntar cuántas unidades lleva
     do {
         if (producto) {
             var { value: cantidad, isDenied } = await Swal.fire({
@@ -66,39 +70,42 @@ async function ListadeProductos() {
                 showDenyButton: true,
                 showCancelButton: false,
             });
+
+            //Abrir el carro
             if (isDenied) {
-                VerCarro();
+                await VerCarro();
+                return;
             };
         }
+        //Validar
         if (isNaN(cantidad) || cantidad < 0) {
             await Swal.fire({
                 title: "Ingrese solo números positivos",
                 confirmButtonText: "Intentar de nuevo",
                 showCancelButton: false,
             });
+            //Internamente agrega al carro
         } else if (cantidad) {
             agregar(p[producto - 1], cantidad); // Agregar al carrito
-            agregarmas();
+            await agregarmas();
         }
     } while (isNaN(cantidad) || cantidad < 0);
-
-
-
 }
 
 // Ver carro
 async function VerCarro() {
     // Regenerar el HTML del carrito cada vez que se vea el carro
-    let htmlStr = "<table><tr style='font-weight: bold;'><td> \u00A0 ID \u00A0</td> <td> \u00A0Producto\u00A0 </td><td> \u00A0Cantidad\u00A0 </td> <td>\u00A0 Precio \u00A0</tr>";
+    let htmlStr = "<table><tr style='font-weight: bold;'><td> \u00A0Producto\u00A0 </td><td> \u00A0Cantidad\u00A0 </td> <td>\u00A0 Precio \u00A0</tr>";
     for (let i = 0; i < ProductosCarro.length; ++i) {
         htmlStr += "<tr>";
-        htmlStr += "<td>" + (i + 1) + "</td>"; // ID
         htmlStr += "<td>" + ProductosCarro[i] + "</td>"; // Nombre
         htmlStr += "<td>" + CantidadCarro[i] + "</td>"; // Cantidad
         htmlStr += "<td>$" + PrecioCarro[i] + "</td>"; // Precio
         htmlStr += "</tr>";
     }
     htmlStr += "</table>";
+
+    //Precio total
     FinCompra()
     var { isConfirmed, isDenied } = await Swal.fire({
         title: "Carro",
@@ -127,8 +134,9 @@ async function VerFinal() {
         htmlStr += "</tr>";
     }
     htmlStr += "</table>";
-    FinCompra();
 
+    //Internamente finalizar compra
+    FinCompra();
     await Swal.fire({
         title: "Detalle de la compra",
         html: `<div style="display: flex; justify-content: center;"> ${htmlStr} </div> <p> Total de la compra: $${final}</p>`,
@@ -215,9 +223,7 @@ var agregar = function (objeto, cantidad) {
     agregarProducto.ingresar(objeto.nombre, cantidad, cantidad * objeto.precio);
 };
 
-//Función para calcular el precio final
-
-
+//Función para calcular el precio final/total
 var FinCompra = function () {
     final = 0;
     for (let i = 0; i < ProductosCarro.length; ++i) {
